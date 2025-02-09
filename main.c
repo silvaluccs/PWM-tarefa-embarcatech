@@ -13,11 +13,9 @@ int main()
 {
     stdio_init_all();
 
+    setup_led();
 
     while (true) {
-        gpio_put(pino_led, 1);
-        sleep_ms(1000);
-        gpio_put(pino_led, 0);
         sleep_ms(1000);
     }
 }
