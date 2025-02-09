@@ -8,6 +8,7 @@ const uint pino_led = 11;
 void setup_led();
 void setup_pwm(uint pino, uint *slice);
 void girar_servo_180(uint pino, uint slice);
+void girar_servo_90(uint pino, uint slice);
 
 int main() {
     stdio_init_all();
@@ -19,7 +20,7 @@ int main() {
 
     while (true) {
         printf("Girando servo 180 graus\n");
-        girar_servo_180(pino_servo, slice);
+        girar_servo_90(pino_servo, slice);
         sleep_ms(5000);  // Aguarda 5 segundos
     }
 }
@@ -48,6 +49,12 @@ void setup_pwm(uint pino, uint *slice) {
  */
 void girar_servo_180(uint pino, uint slice) {
     pwm_set_gpio_level(pino, 480);  // 12% de 4000 -> 480
+    pwm_set_enabled(slice, true);   // Habilita o PWM no slice correspondente
+    sleep_ms(5000);                 // Aguarda 5 segundos
+}
+
+void girar_servo_90(uint pino, uint slice) {
+    pwm_set_gpio_level(pino, 294);  // 7,35% de 4000 -> 294
     pwm_set_enabled(slice, true);   // Habilita o PWM no slice correspondente
     sleep_ms(5000);                 // Aguarda 5 segundos
 }
