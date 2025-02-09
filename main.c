@@ -10,7 +10,7 @@ void setup_pwm(uint pino, uint *slice);
 void girar_servo_180(uint pino, uint slice);
 void girar_servo_90(uint pino, uint slice);
 void girar_servo_0(uint pino, uint slice);
-
+void mover_servo_suavemente(uint pino, uint slice, uint inicio, uint fim);
 
 int main() {
     stdio_init_all();
@@ -21,9 +21,10 @@ int main() {
     setup_pwm(pino_servo, &slice);
 
     while (true) {
-        printf("Girando servo 180 graus\n");
-        girar_servo_90(pino_servo, slice);
-        sleep_ms(5000);  // Aguarda 5 segundos
+
+        girar_servo_180(pino_servo, slice);
+    
+
     }
 }
 
@@ -42,15 +43,15 @@ void setup_led() {
 void setup_pwm(uint pino, uint *slice) {
     gpio_set_function(pino, GPIO_FUNC_PWM);  // Habilitar o pino GPIO como PWM
     *slice = pwm_gpio_to_slice_num(pino);    // Obter o canal PWM da GPIO
-    pwm_set_clkdiv(*slice, 625.f);           // Define o divisor de clock do PWM
-    pwm_set_wrap(*slice, 4000);              // Define o valor de wrap (4000 passos)
+    pwm_set_clkdiv(*slice, 38.1f);           // Define o divisor de clock do PWM
+    pwm_set_wrap(*slice, 65535);              // Define o valor de wrap (4000 passos)
 }
 
 /*
  * Função para girar o servo para 180 graus (Duty Cycle de 12%)
  */
 void girar_servo_180(uint pino, uint slice) {
-    pwm_set_gpio_level(pino, 480);  // 12% de 4000 -> 480
+    pwm_set_gpio_level(pino, 8000);  // 12% de 4000 -> 480
     pwm_set_enabled(slice, true);   // Habilita o PWM no slice correspondente
     sleep_ms(5000);                 // Aguarda 5 segundos
 }
@@ -68,4 +69,13 @@ void girar_servo_0(uint pino, uint slice) {
     pwm_set_gpio_level(pino, 100);  // 2,5% de 4000 -> 100
     pwm_set_enabled(slice, true);   // Habilita o PWM no slice correspondente
     sleep_ms(5000);                 // Aguarda 5 segundos
+}
+
+void mover_servo_suavemente(uint pino, uint slice, uint inicio, uint fim) {
+    int passo = (inicio < fim) ? 1 : -1;
+    for (uint nivel = inicio; nivel != fim; nivel += passo) {
+        pwm_set_gpio_level(pino, nivel);
+        sleep_ms(10);  // Atraso de 10 ms para suavizar o movimento
+    }
+    pwm_set_gpio_level(pino, fim);  // Garante que chegue ao valor final
 }
