@@ -9,8 +9,10 @@ const uint zero_graus = 1638;  // 2,5% de 65535 -> 1638
 const uint noventa_graus = 4817;  // 7,35% de 65535 -> 4817
 const uint cento_oitenta_graus = 7864;  // 12% de 65535 -> 7864
 
+
 const float frequencia_pwm = 38.1f;  // Frequência de 50 Hz
 const uint wrap_pwm = 65535;  // 65535 passos
+
 
 void setup_led(); // Protótipo da função para configurar o pino do LED
 void setup_pwm(uint pino, uint *slice); // Protótipo da função para configurar o pino do servo com frequência de 50 Hz
@@ -19,24 +21,39 @@ void girar_servo_90(uint pino, uint slice); // Protótipo da função para girar
 void girar_servo_0(uint pino, uint slice); // Protótipo da função para girar o servo para 0 graus (Duty Cycle de 2,5%)
 void mover_servo_suavemente(uint pino, uint slice, uint inicio, uint fim); // Protótipo da função para mover o servo suavemente de um ângulo para outro
 
+
 int main() {
     stdio_init_all();
 
     setup_led();
 
-    uint slice;
-    setup_pwm(pino_servo, &slice);
+    uint slice_servo;
+    setup_pwm(pino_servo, &slice_servo);
+
+    uint slice_led;
+    setup_pwm(pino_led, &slice_led);
 
     while (true) {
 
-        girar_servo_180(pino_servo, slice); // 0° -> 180°
-        girar_servo_90(pino_servo, slice); // 180° -> 90°
-        girar_servo_0(pino_servo, slice); // 90° -> 0° 
+        girar_servo_180(pino_servo, slice_servo); // 0° -> 180°
+        girar_servo_90(pino_servo, slice_servo); // 180° -> 90°
+        girar_servo_0(pino_servo, slice_servo); // 90° -> 0° 
         
-        mover_servo_suavemente(pino_servo, slice, zero_graus, cento_oitenta_graus);  // 0° -> 180°
-        mover_servo_suavemente(pino_servo, slice, cento_oitenta_graus, zero_graus);  // 180° -> 0°
+        mover_servo_suavemente(pino_servo, slice_servo, zero_graus, cento_oitenta_graus);  // 0° -> 180°
+        mover_servo_suavemente(pino_servo, slice_servo, cento_oitenta_graus, zero_graus);  // 180° -> 0°
 
         sleep_ms(1000);  // Atraso de 1 segundo
+
+        // utilizando as funções do servo para acender e apagar o LED
+        girar_servo_180(pino_led, slice_led); // Acende o LED
+        girar_servo_90(pino_led, slice_led); // Led meio aceso
+        girar_servo_0(pino_led, slice_led); // Apaga o LED
+
+        mover_servo_suavemente(pino_led, slice_led, zero_graus, cento_oitenta_graus);  // Acende o LED
+        mover_servo_suavemente(pino_led, slice_led, cento_oitenta_graus, zero_graus);  // Apaga o LED
+
+        sleep_ms(1000);  // Atraso de 1 segundo
+
     }
 }
 
@@ -95,7 +112,8 @@ void girar_servo_0(uint pino, uint slice) {
  * Função para mover o servo suavemente de um ângulo para outro
  */
 void mover_servo_suavemente(uint pino, uint slice, uint inicio, uint fim) {
-    int passo = (inicio < fim) ? 16 : -16;
+    int passo = (inicio < fim) ? 20 : -20; // Passo de 16 para suavizar o movimento
+
     for (int nivel = inicio; nivel != fim; nivel += passo) {
         pwm_set_gpio_level(pino, nivel);
         sleep_ms(10);  // Atraso de 10 ms para suavizar o movimento
