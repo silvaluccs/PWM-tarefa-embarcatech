@@ -9,6 +9,8 @@ void setup_led();
 void setup_pwm(uint pino, uint *slice);
 void girar_servo_180(uint pino, uint slice);
 void girar_servo_90(uint pino, uint slice);
+void girar_servo_0(uint pino, uint slice);
+
 
 int main() {
     stdio_init_all();
@@ -55,6 +57,15 @@ void girar_servo_180(uint pino, uint slice) {
 
 void girar_servo_90(uint pino, uint slice) {
     pwm_set_gpio_level(pino, 294);  // 7,35% de 4000 -> 294
+    pwm_set_enabled(slice, true);   // Habilita o PWM no slice correspondente
+    sleep_ms(5000);                 // Aguarda 5 segundos
+}
+
+/*
+ * Função para girar o servo para 0 graus (Duty Cycle de 2,5%)
+ */
+void girar_servo_0(uint pino, uint slice) {
+    pwm_set_gpio_level(pino, 100);  // 2,5% de 4000 -> 100
     pwm_set_enabled(slice, true);   // Habilita o PWM no slice correspondente
     sleep_ms(5000);                 // Aguarda 5 segundos
 }
