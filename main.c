@@ -51,7 +51,7 @@ void setup_pwm(uint pino, uint *slice) {
  * Função para girar o servo para 180 graus (Duty Cycle de 12%)
  */
 void girar_servo_180(uint pino, uint slice) {
-    pwm_set_gpio_level(pino, 8000);  // 12% de 4000 -> 480
+    pwm_set_gpio_level(pino, 7864);  
     pwm_set_enabled(slice, true);   // Habilita o PWM no slice correspondente
     sleep_ms(5000);                 // Aguarda 5 segundos
 }
