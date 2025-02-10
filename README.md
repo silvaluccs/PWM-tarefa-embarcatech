@@ -1,8 +1,106 @@
-# README - Controle de Servo Motor e LED com Raspberry Pi Pico
+# Controle de Servo Motor e LED com Raspberry Pi Pico
 
 Este repositório contém um código em C para controlar um servo motor e um LED utilizando um Raspberry Pi Pico. O código foi desenvolvido para demonstrar o funcionamento básico de um servo motor, que é controlado por sinais PWM (Pulse Width Modulation), e também para explorar o comportamento de um LED quando submetido a sinais PWM.
 
 Aqui, você encontrará uma explicação detalhada do código, instruções sobre como executá-lo e uma análise do comportamento do LED quando substitui o servo motor.
+
+Vídeo explicativo: https://drive.google.com/file/d/1ZgPplRVoFYqS0Srg5YwkoDW46eDpsodg/view?usp=sharing
+
+---
+# Cálculos de Frequência e Ciclo Ativo para PWM (Servomotor)
+
+## 1. Cálculo de `freqInt`  
+A fórmula para a frequência do PWM é:  
+
+$$
+F_{pwm} = \frac{F_{init}}{(freqInt + \frac{FreqFac}{16}) \cdot wrap}
+$$
+
+Substituindo os valores fornecidos:  
+
+- $$( F_{pwm} = 50 \ Hz $$)
+- $$( F_{init} = 125 \ MHz = 125 \times 10^6 $$)
+- $$( FreqFac = 0 $$)
+- $$( wrap = 65535 $$)
+
+A fórmula simplifica para:  
+
+$$
+50 = \frac{125 \times 10^6}{freqInt \cdot 65535}
+$$
+
+
+1. Multiplicamos $$( 50 \times 65535 = 3.27675 \times 10^6 $$)
+2. Dividimos $$( 125 \times 10^6 \) por \( 3.27675 \times 10^6 $$):
+
+
+$$
+freqInt \approx 38,1
+$$
+
+---
+
+## 2. Cálculo do Ciclo Ativo (Duty Cycle)  
+O período de um sinal PWM com frequência de **50 Hz** é:
+
+$$
+T = \frac{1}{F_{PWM}} = \frac{1}{50} = 20 \, ms = 20.000 \, \mu s
+$$
+
+O ciclo ativo (Duty Cycle) é a razão entre o tempo ativo ($( t_{on} $)) e o período total ($( T $)):
+
+$${Duty Cycle} = \frac{t_{on}}{T} \times 100 $$
+
+### Cálculos:
+
+1. **Tempo ativo de 2.400 µs → Ciclo Ativo: 12%**  
+   $${Duty Cycle} = \frac{2400}{20000} \times 100 = 12 $$ 
+
+2. **Tempo ativo de 1.470 µs → Ciclo Ativo: 7,35%**  
+   $${Duty Cycle} = \frac{1470}{20000} \times 100 = 7,35 $$ 
+
+3. **Tempo ativo de 500 µs → Ciclo Ativo: 2,5%**  
+   $${Duty Cycle} = \frac{500}{20000} \times 100 = 2,5 $$
+
+---
+
+## 3. Conversão para Valor PWM (Wrap de 65535)  
+O valor correspondente no contador PWM é proporcional ao duty cycle:
+
+$$({Valor PWM} = \text{Duty Cycle} \times 65535) $$
+
+### Cálculos:
+
+1. **Ciclo Ativo de 12% (2.400 µs)**  
+   $${Valor PWM} = 0,12 \times 65535 = 7864$$
+
+2. **Ciclo Ativo de 7,35% (1.470 µs)**  
+   $$
+   {Valor PWM} = 0,0735 \times 65535 = 4815
+   $$
+
+3. **Ciclo Ativo de 2,5% (500 µs)**  
+   $$
+   {Valor PWM} = 0,025 \times 65535 = 1638
+   $$
+
+---
+
+## Resumo dos Resultados:
+
+| Tempo Ativo (\( \mu s \)) | Ciclo Ativo (%) | Valor PWM |
+|---------------------------|-----------------|-----------|
+| 2.400                      | 12%             | 7864      |
+| 1.470                      | 7,35%           | 4815      |
+| 500                        | 2,5%            | 1638      |
+
+---
+
+## Observação:
+Esses valores podem ser usados para controlar a posição de um servomotor, ajustando o pulso para diferentes ângulos:
+- **2.400 µs → 180 graus**
+- **1.470 µs → 90 graus**
+- **500 µs → 0 graus**
 
 ---
 
