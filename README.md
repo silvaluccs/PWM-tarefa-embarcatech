@@ -76,7 +76,7 @@ $$({Valor PWM} = \text{Duty Cycle} \times 65535) $$
 
 2. **Ciclo Ativo de 7,35% (1.470 µs)**  
    $$
-   {Valor PWM} = 0,0735 \times 65535 = 4815
+   {Valor PWM} = 0,0735 \times 65535 = 4817
    $$
 
 3. **Ciclo Ativo de 2,5% (500 µs)**  
@@ -91,7 +91,7 @@ $$({Valor PWM} = \text{Duty Cycle} \times 65535) $$
 | Tempo Ativo (\( \mu s \)) | Ciclo Ativo (%) | Valor PWM |
 |---------------------------|-----------------|-----------|
 | 2.400                      | 12%             | 7864      |
-| 1.470                      | 7,35%           | 4815      |
+| 1.470                      | 7,35%           | 4817      |
 | 500                        | 2,5%            | 1638      |
 
 ---
