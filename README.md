@@ -4,8 +4,6 @@ Este repositório contém um código em C para controlar um servo motor e um LED
 
 Aqui, você encontrará uma explicação detalhada do código, instruções sobre como executá-lo e uma análise do comportamento do LED quando substitui o servo motor.
 
-Vídeo explicativo: https://drive.google.com/file/d/1ZgPplRVoFYqS0Srg5YwkoDW46eDpsodg/view?usp=sharing
-
 ---
 # Cálculos de Frequência e Ciclo Ativo para PWM (Servomotor)
 
